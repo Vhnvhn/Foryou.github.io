@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .yes {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .no {
+            background-color: #f44336;
+            color: white;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="question-container">
+    <h1 id="question">Is your name Jameson R. Santos?</h1>
+    <button class="yes" id="yes-button">Yes</button>
+    <button class="no" id="no-button">No</button>
+</div>
+
+<script>
+    let container = document.getElementById('question-container');
+    let questionElement = document.getElementById('question');
+    let yesButton = document.getElementById('yes-button');
+    let noButton = document.getElementById('no-button');
+    let noClickCount = 0;
+    
+    function showNextQuestion(questionText, yesCallback, noCallback) {
+        questionElement.innerText = questionText;
+        yesButton.onclick = yesCallback;
+        noButton.onclick = noCallback;
+    }
+
+    function randomizeNoButtonPosition() {
+        let containerRect = container.getBoundingClientRect();
+        let buttonRect = noButton.getBoundingClientRect();
+        let x = Math.random() * (containerRect.width - buttonRect.width);
+        let y = Math.random() * (containerRect.height - buttonRect.height);
+        noButton.style.position = 'absolute';
+        noButton.style.left = '${x}px;'
+        noButton.style.top = '${y}px;'
+    }
+
+    yesButton.onclick = function() {
+        showNextQuestion(
+            "Are you in Putlod?",
+            function() {
+                showNextQuestion(
+                    "Are you the albino guy?",
+                    function() {
+                        showNextQuestion(
+                            "Crush mo ko?",
+                            function() {
+                                container.innerHTML = "<p>Alam ko</p>";
+                            },
+                            function() {
+                                noClickCount++;
+                                if (noClickCount >= 7) {
+                                    noButton.style.display = 'none';
+                                } else {
+                                    randomizeNoButtonPosition();
+                                }
+                            }
+                        );
+                    },
+                    function() {
+                        container.innerHTML = "<p>Tanga Ikaw un ung mukang albino</p>";
+                    }
+                );
+            },
+            function() {
+                container.innerHTML = "<p>Eh, tiga saan sa mama mo?</p>";
+            }
+        );
+    };
+
+    noButton.onclick = function() {
+        if (questionElement.innerText.includes("Crush mo ko?")) {
+            noClickCount++;
+            if (noClickCount >= 7) {
+                noButton.style.display = 'none';
+            } else {
+                randomizeNoButtonPosition();
+            }
+        } else {
+            questionElement.innerText = "Di sayo toh di pala ikaw eh";
+            yesButton.style.display = 'none';
+            noButton.style.display = 'none';
+        }
+    };
+</script>
+
+</body>
+</html>
